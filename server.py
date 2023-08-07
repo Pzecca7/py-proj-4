@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, request
 from forms import TeamForm, ProjectForm
 from model import db, User, Team, Project, connect_to_db
 
@@ -47,6 +47,17 @@ def add_project():
         return redirect(url_for("home"))
     else:
         return redirect(url_for("home"))
+
+@app.route("/teams")
+def teams():
+    user = User.query.get(user_id)
+    return render_template("teams.html", title = "Teams", page = "teams", teams = user.teams)
+
+@app.route("/projects")
+def projects():
+    user = User.query.get(user_id)
+    projects = user.get_all_projects()
+    return render_template("projects.html", title = "Projects", page = "projects", projects = projects)
 
 if __name__ == "__main__":
     connect_to_db(app)
